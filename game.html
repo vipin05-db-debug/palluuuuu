@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cute Memory Game — Party Mode</title>
+
+  <style>
+    /* ---------------- page layout ---------------- */
+        * {
+            box-sizing: border-box;
+        }
+body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+
+            font-family: "Shantell Sans", cursive;
+            color: #fff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background Animated Glow (unchanged) */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(255, 0, 150, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(0, 200, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 10%, rgba(255, 255, 0, 0.1) 0%, transparent 50%);
+            animation: backgroundGlow 15s ease-in-out infinite alternate;
+            z-index: 1;
+        }
+
+        @keyframes backgroundGlow {
+
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        /* Sparkle Overlay (Original white dots - retained) */
+        .sparkle-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .sparkle-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 2px;
+            background: #ffddff;
+            border-radius: 50%;
+            box-shadow: 10vw 40vh 0 0.5px #fff, 20vw 80vh 0 0.5px #ffddff, 30vw 10vh 0 1px #fff, 40vw 60vh 0 0.5px #ffddff, 50vw 30vh 0 1px #fff, 60vw 90vh 0 0.5px #ffddff, 70vw 20vh 0 1px #fff, 80vw 50vh 0 0.5px #ffddff, 90vw 75vh 0 1px #fff, 5vw 15vh 0 0.5px #ffddff, 95vw 5vh 0 1px #fff, 45vw 85vh 0 0.5px #ffddff, 85vw 30vh 0 1px #fff, 15vw 50vh 0 0.5px #ffddff, 75vw 95vh 0 1px #fff, 25vw 5vh 0 0.5px #ffddff, 12vw 62vh 0 0.75px #fff, 58vw 18vh 0 0.75px #ffddff, 35vw 45vh 0 0.5px #fff, 78vw 82vh 0 1px #ffddff, 4vw 38vh 0 0.75px #fff, 68vw 68vh 0 0.5px #ffddff, 92vw 42vh 0 1px #fff, 22vw 32vh 0 0.75px #ffddff, 55vw 55vh 0 0.5px #fff, 18vw 88vh 0 1px #ffddff, 88vw 12vh 0 0.75px #fff, 38vw 98vh 0 0.5px #ffddff;
+            animation: sparkleMove 20s linear infinite, sparkleFade 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes sparkleMove {
+
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(100px, 100px) scale(1.1);
+            }
+        }
+
+        @keyframes sparkleFade {
+
+            0% {
+                opacity: 0.2;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.2;
+            }
+        }
+
+        /* === HEART SPARKLE LAYER (SUBTLE MOVEMENT) === */
+        .heart-sparkle-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            overflow: hidden;
+            animation: backgroundGlow 15s ease-in-out infinite alternate;
+        }
+
+        /* KEYFRAME: SUBTLE SHIFT (Matching the movement style of .sparkle-overlay) */
+        @keyframes floatHeart {
+            0% {
+                transform: translate(0px, 0px) scale(0.9) rotate(0deg);
+                opacity: 0.2;
+            }
+
+            50% {
+                transform: translate(50px, 50px) scale(1.1) rotate(15deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(100px, 100px) scale(0.9) rotate(0deg);
+                opacity: 0.2;
+            }
+        }
+
+        .heart-sparkle-layer .heart {
+            position: absolute;
+            color: #ff0059;
+            text-shadow: 0 0 5px rgba(255, 0, 90, 0.8);
+            animation: floatHeart 10s linear infinite alternate;
+            font-size: clamp(0.3rem, 1vw + 0.5rem, 1.5rem);
+        }
+
+        /* High-Density Staggering for Random Sparkle Effect (30 Hearts) */
+        .heart-sparkle-layer .heart:nth-child(1) {
+            top: 80vh;
+            left: 10vw;
+            animation-delay: 0s;
+            animation-duration: 10s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(2) {
+            top: 10vh;
+            left: 90vw;
+            animation-delay: 1s;
+            animation-duration: 12s;
+            font-size: 1rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(3) {
+            top: 40vh;
+            left: 45vw;
+            animation-delay: 2s;
+            animation-duration: 9s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(4) {
+            top: 70vh;
+            left: 60vw;
+            animation-delay: 3s;
+            animation-duration: 11s;
+            font-size: 1.2rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(5) {
+            top: 5vh;
+            left: 30vw;
+            animation-delay: 4s;
+            animation-duration: 8s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(6) {
+            top: 90vh;
+            left: 75vw;
+            animation-delay: 5s;
+            animation-duration: 13s;
+            font-size: 0.8rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(7) {
+            top: 25vh;
+            left: 5vw;
+            animation-delay: 6s;
+            animation-duration: 10s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(8) {
+            top: 55vh;
+            left: 20vw;
+            animation-delay: 0.5s;
+            animation-duration: 12.5s;
+            font-size: 0.7rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(9) {
+            top: 15vh;
+            left: 50vw;
+            animation-delay: 1.5s;
+            animation-duration: 9.5s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(10) {
+            top: 95vh;
+            left: 40vw;
+            animation-delay: 2.5s;
+            animation-duration: 11.5s;
+            font-size: 1.1rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(11) {
+            top: 30vh;
+            left: 80vw;
+            animation-delay: 3.5s;
+            animation-duration: 8.5s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(12) {
+            top: 85vh;
+            left: 5vw;
+            animation-delay: 4.5s;
+            animation-duration: 12s;
+            font-size: 0.9rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(13) {
+            top: 50vh;
+            left: 70vw;
+            animation-delay: 5.5s;
+            animation-duration: 13.5s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(14) {
+            top: 20vh;
+            left: 15vw;
+            animation-delay: 6.5s;
+            animation-duration: 10.5s;
+            font-size: 1.3rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(15) {
+            top: 60vh;
+            left: 95vw;
+            animation-delay: 7.5s;
+            animation-duration: 8s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(16) {
+            top: 75vh;
+            left: 30vw;
+            animation-delay: 8.5s;
+            animation-duration: 12.8s;
+            font-size: 0.6rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(17) {
+            top: 35vh;
+            left: 65vw;
+            animation-delay: 9.5s;
+            animation-duration: 9s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(18) {
+            top: 10vh;
+            left: 5vw;
+            animation-delay: 10.5s;
+            animation-duration: 11s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(19) {
+            top: 80vh;
+            left: 90vw;
+            animation-delay: 11.5s;
+            animation-duration: 13s;
+            font-size: 1.1rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(20) {
+            top: 45vh;
+            left: 10vw;
+            animation-delay: 12.5s;
+            animation-duration: 8.5s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(21) {
+            top: 5vh;
+            left: 5vw;
+            animation-delay: 0.2s;
+            animation-duration: 9s;
+            font-size: 0.4rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(22) {
+            top: 90vh;
+            left: 20vw;
+            animation-delay: 1.2s;
+            animation-duration: 11s;
+            font-size: 0.45rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(23) {
+            top: 60vh;
+            left: 85vw;
+            animation-delay: 2.2s;
+            animation-duration: 10s;
+            font-size: 0.35rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(24) {
+            top: 20vh;
+            left: 40vw;
+            animation-delay: 3.2s;
+            animation-duration: 13s;
+            font-size: 0.4rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(25) {
+            top: 70vh;
+            left: 95vw;
+            animation-delay: 4.2s;
+            animation-duration: 9.5s;
+            font-size: 0.5rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(26) {
+            top: 30vh;
+            left: 75vw;
+            animation-delay: 5.2s;
+            animation-duration: 10.8s;
+            font-size: 0.3rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(27) {
+            top: 85vh;
+            left: 50vw;
+            animation-delay: 6.2s;
+            animation-duration: 11.2s;
+            font-size: 0.45rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(28) {
+            top: 15vh;
+            left: 25vw;
+            animation-delay: 7.2s;
+            animation-duration: 8.2s;
+            font-size: 0.4rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(29) {
+            top: 40vh;
+            left: 5vw;
+            animation-delay: 8.2s;
+            animation-duration: 12.4s;
+            font-size: 0.5rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(30) {
+            top: 95vh;
+            left: 70vw;
+            animation-delay: 9.2s;
+            animation-duration: 9.8s;
+            font-size: 0.35rem;
+        }
+
+        /* Existing custom animations (retained for the main heart and text) */
+        @keyframes floatAnim {
+            0% {
+                transform: translateX(0px) scale(1);
+            }
+
+            50% {
+                transform: translateX(5px) scale(1.02);
+            }
+
+            100% {
+                transform: translateX(0px) scale(1);
+            }
+        }
+
+        @keyframes heartBeat {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .animate-float {
+            animation: floatAnim 1s infinite alternate;
+        }
+
+        .animate-pulse-heart {
+            animation: heartBeat 1s infinite ease-in-out;
+        }
+
+        .animate-float-reverse {
+            animation: floatAnim 3s infinite alternate reverse;
+        }
+    
+    /* ---------------- start page ---------------- */
+    #startPage {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      z-index: 10;
+      background: transparent
+    }
+
+    #startHeart {
+      border: none;
+      background-color: #ffffffe8;
+      font-size: 50px;
+      width: 70px;
+      height: 70px;
+      cursor: pointer;
+      user-select: none;
+      border-radius: 50px;
+      animation: heartBeat 1s infinite ease-in-out;
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    #tapTxt { font-size: 1.2rem; font-weight: 600; }
+
+    /* ---------------- game page ---------------- */
+    #gamePage {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      width: 100%;
+      padding-top: 20px;
+      z-index: 5
+    }
+
+    #topText {
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 700;
+      line-height: 1.4;
+      text-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    /* ---------------- grid ---------------- */
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      width: 90%;
+      max-width: 420px;
+      margin-top: 15px;
+    }
+
+    .card {
+      width: 100%;
+      padding-top: 100%;
+      position: relative;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    /* === ANIMATIONS === */
+    /* Shake (Wrong Guess) */
+    @keyframes shakeAnim {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-5px) rotate(-5deg); }
+      40% { transform: translateX(5px) rotate(5deg); }
+      60% { transform: translateX(-5px) rotate(-5deg); }
+      80% { transform: translateX(5px) rotate(5deg); }
+      100% { transform: translateX(0); }
+    }
+    .shake {
+      animation: shakeAnim 0.5s ease-in-out;
+    }
+
+    /* Bubble Pop (Match Success) */
+    @keyframes popAnim {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); box-shadow: 0 0 20px rgba(255, 255, 255, 0.6); }
+      70% { transform: scale(0.95); }
+      100% { transform: scale(1); }
+    }
+    .pop {
+      animation: popAnim 0.6s ease-out forwards;
+      z-index: 10;
+    }
+
+    .inner {
+      position: absolute;
+      inset: 0;
+      transition: transform 0.6s cubic-bezier(.2, .8, .2, 1);
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+      border-radius: 14px;
+    }
+
+    .card.flipped .inner {
+      transform: rotateY(180deg);
+    }
+
+    .front, .back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .front {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back {
+      transform: rotateY(180deg);
+    }
+
+    .back img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ---------------- CONFETTI (FIXED) ---------------- */
+    #confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      display: none;
+      z-index: 30;
+      /* removed overflow hidden so we can see them enter screen */
+    }
+    
+    .conf {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: var(--c);
+      /* Start at bottom of screen */
+      bottom: 0; 
+      /* Random left position is set in JS */
+      opacity: 1;
+      animation: cannonShoot 3s ease-out forwards;
+    }
+
+    /* The Cannon Effect: Shoot UP and OUT */
+    @keyframes cannonShoot {
+      0% {
+        transform: translate(0, 0) scale(0.5);
+        opacity: 1;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        /* Move using CSS variables set in JS */
+        transform: translate(var(--tx), var(--ty)) rotate(720deg) scale(1);
+        opacity: 0;
+      }
+    }
+
+    /* ---------------- FINAL BIG MESSAGE ---------------- */
+    #finalMessage {
+      display: none; 
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3.5rem;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.2;
+      color: #fff;
+      text-shadow: 0 0 20px #ff00de, 0 0 40px #ff00de;
+      z-index: 100;
+      animation: zoomIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      width: 90%;
+    }
+
+    @keyframes zoomIn {
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+
+    @media (max-width:420px) {
+      #grid { max-width: 360px; gap: 10px; }
+      #startHeart { font-size: 72px; }
+      #finalMessage { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+       <div class="sparkle-overlay"></div>
+
+    <div class="heart-sparkle-layer">
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+    </div>
+
+  <div id="startPage">
+    <div id="startHeart">💖</div>
+    <div id="tapTxt">Tap to Start</div>
+  </div>
+
+  <div id="gamePage">
+    <div id="topText">I bet you can't solve this 😅<br>Find the Cute Image! (Ayooo)</div>
+    <div id="grid" aria-live="polite"></div>
+  </div>
+
+  <div id="confetti"></div>
+
+  <div id="finalMessage">
+    HAPPY BIRTHDAY!<br><p style="font-size:0.6em;">Tell me, how is it? 👉🤭👈</p>
+  </div>
+
+  <audio id="bgm" loop>
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="wrongSfx">
+    <source src="ayoo.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    /* ---------------- DOM refs ---------------- */
+    const startHeart = document.getElementById('startHeart');
+    const startPage = document.getElementById('startPage');
+    const gamePage = document.getElementById('gamePage');
+    const grid = document.getElementById('grid');
+    const bgm = document.getElementById('bgm');
+    const wrongSfx = document.getElementById('wrongSfx');
+    const confetti = document.getElementById('confetti');
+    const finalMessage = document.getElementById('finalMessage');
+
+    /* ---------------- images ---------------- */
+    const imgs = [
+      "img1.png", "img2.png", "img3.png", "img4.png",
+      "img5.png", "img6.png", "img7.png", "img8.png"
+    ];
+
+    /* double and shuffle */
+    let cards = [...imgs, ...imgs].sort(() => Math.random() - 0.5);
+
+    /* build grid */
+    function buildGrid() {
+      grid.innerHTML = '';
+      cards.forEach(src => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.pic = src;
+        card.innerHTML = `
+          <div class="inner">
+            <div class="front"></div>
+            <div class="back"><img src="${src}" alt="card"></div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+    buildGrid();
+
+    /* ---------------- GAME LOGIC ---------------- */
+    let first = null, second = null, lock = false, matched = 0;
+
+    grid.addEventListener('click', e => {
+      const card = e.target.closest('.card');
+      if (!card || lock || card.classList.contains('flipped') || card.classList.contains('pop')) return;
+
+      card.classList.add('flipped');
+
+      if (!first) {
+        first = card;
+        return;
+      }
+      second = card;
+      checkMatch();
+    });
+
+    function checkMatch() {
+      const c1 = first;
+      const c2 = second;
+
+      if (c1.dataset.pic === c2.dataset.pic) {
+        /* MATCH */
+        matched++;
+        setTimeout(() => {
+          c1.classList.add('pop');
+          c2.classList.add('pop');
+        }, 300);
+
+        first = null; second = null;
+        
+        if (matched === imgs.length) {
+          onWin();
+        }
+        
+      } else {
+        /* WRONG */
+        lock = true;
+        setTimeout(() => {
+          wrongSfx.pause();
+          wrongSfx.currentTime = 0;
+          wrongSfx.play().catch(() => {});
+
+          c1.classList.add('shake');
+          c2.classList.add('shake');
+
+          setTimeout(() => {
+            c1.classList.remove('flipped', 'shake');
+            c2.classList.remove('flipped', 'shake');
+            first = null; second = null;
+            lock = false;
+          }, 1500);
+        },200);
+      }
+    }
+
+    /* ---------------- START ---------------- */
+    startHeart.addEventListener('click', () => {
+      bgm.play().catch(() => { });
+      startPage.style.display = 'none';
+      gamePage.style.display = 'flex';
+    });
+
+    /* ---------------- WIN SEQUENCE ---------------- */
+    function onWin() {
+      // 1. Trigger Confetti Cannon
+      launchConfetti();
+      setTimeout(launchConfetti, 1000); // multiple bursts
+      setTimeout(launchConfetti, 2000);
+
+      // 2. WAIT 5 SECONDS (Enjoyment Phase)
+      // (Using 5 seconds to test, change 5000 to 300000 for 5 minutes)
+      setTimeout(() => {
+        
+        // 3. REMOVE EVERYTHING (Background only)
+        gamePage.style.display = 'none';
+        confetti.style.display = 'none';
+        confetti.innerHTML = '';
+
+        // 4. WAIT 2 SECONDS (Silence)
+        setTimeout(() => {
+          
+          // 5. SHOW BIG FINAL TEXT
+          finalMessage.style.display = 'block';
+          
+        }, 2000); // 2 sec silence
+
+      }, 5000); // 5 sec party
+    }
+
+    /* ---------------- FIXED CONFETTI LOGIC ---------------- */
+    function launchConfetti() {
+      confetti.style.display = 'block';
+      const total = 100; // lots of particles
+      
+      for (let i = 0; i < total; i++) {
+        const d = document.createElement('div');
+        d.className = 'conf';
+        d.style.setProperty('--c', randomColor());
+        
+        // Split them: 50% left side, 50% right side
+        const isLeft = Math.random() < 0.5;
+        
+        if (isLeft) {
+          d.style.left = '0%';
+          d.style.bottom = '0%';
+          // Shoot towards center-right
+          d.style.setProperty('--tx', (20 + Math.random() * 50) + 'vw'); 
+        } else {
+          d.style.right = '0%'; // Start at right
+          d.style.bottom = '0%';
+          d.style.left = 'auto'; // reset left
+          // Shoot towards center-left (negative x)
+          d.style.setProperty('--tx', '-' + (20 + Math.random() * 50) + 'vw'); 
+        }
+
+        // Shoot UP (negative Y)
+        d.style.setProperty('--ty', '-' + (50 + Math.random() * 50) + 'vh');
+
+        confetti.appendChild(d);
+        setTimeout(() => d.remove(), 3000);
+      }
+    }
+    
+    function randomColor() {
+      const pool = ['#ff5f5f', '#ffbb00', '#00e1ff', '#9d72ff', '#ff55dd', '#ffd6e0'];
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+  </script>
+</body>
+</html>

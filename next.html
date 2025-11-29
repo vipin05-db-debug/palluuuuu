@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Our Beautiful Journey</title>
+
+<style>
+    /* --- CORE BACKGROUND & FONTS --- */
+           
+body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+
+            font-family: "Shantell Sans", cursive;
+            color: #fff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background Animated Glow (unchanged) */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(255, 0, 150, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(0, 200, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 10%, rgba(255, 255, 0, 0.1) 0%, transparent 50%);
+            animation: backgroundGlow 15s ease-in-out infinite alternate;
+            z-index: 1;
+        }
+
+        @keyframes backgroundGlow {
+
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        /* Sparkle Overlay (Original white dots - retained) */
+        .sparkle-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .sparkle-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 2px;
+            background: #ffddff;
+            border-radius: 50%;
+            box-shadow: 10vw 40vh 0 0.5px #fff, 20vw 80vh 0 0.5px #ffddff, 30vw 10vh 0 1px #fff, 40vw 60vh 0 0.5px #ffddff, 50vw 30vh 0 1px #fff, 60vw 90vh 0 0.5px #ffddff, 70vw 20vh 0 1px #fff, 80vw 50vh 0 0.5px #ffddff, 90vw 75vh 0 1px #fff, 5vw 15vh 0 0.5px #ffddff, 95vw 5vh 0 1px #fff, 45vw 85vh 0 0.5px #ffddff, 85vw 30vh 0 1px #fff, 15vw 50vh 0 0.5px #ffddff, 75vw 95vh 0 1px #fff, 25vw 5vh 0 0.5px #ffddff, 12vw 62vh 0 0.75px #fff, 58vw 18vh 0 0.75px #ffddff, 35vw 45vh 0 0.5px #fff, 78vw 82vh 0 1px #ffddff, 4vw 38vh 0 0.75px #fff, 68vw 68vh 0 0.5px #ffddff, 92vw 42vh 0 1px #fff, 22vw 32vh 0 0.75px #ffddff, 55vw 55vh 0 0.5px #fff, 18vw 88vh 0 1px #ffddff, 88vw 12vh 0 0.75px #fff, 38vw 98vh 0 0.5px #ffddff;
+            animation: sparkleMove 20s linear infinite, sparkleFade 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes sparkleMove {
+
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(100px, 100px) scale(1.1);
+            }
+        }
+
+        @keyframes sparkleFade {
+
+            0% {
+                opacity: 0.2;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.2;
+            }
+        }
+
+        /* === HEART SPARKLE LAYER (SUBTLE MOVEMENT) === */
+        .heart-sparkle-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            overflow: hidden;
+            animation: backgroundGlow 15s ease-in-out infinite alternate;
+        }
+
+        /* KEYFRAME: SUBTLE SHIFT (Matching the movement style of .sparkle-overlay) */
+        @keyframes floatHeart {
+            0% {
+                transform: translate(0px, 0px) scale(0.9) rotate(0deg);
+                opacity: 0.2;
+            }
+
+            50% {
+                transform: translate(50px, 50px) scale(1.1) rotate(15deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(100px, 100px) scale(0.9) rotate(0deg);
+                opacity: 0.2;
+            }
+        }
+
+        .heart-sparkle-layer .heart {
+            position: absolute;
+            color: #ff0059;
+            text-shadow: 0 0 5px rgba(255, 0, 90, 0.8);
+            animation: floatHeart 10s linear infinite alternate;
+            font-size: clamp(0.3rem, 1vw + 0.5rem, 1.5rem);
+        }
+
+        /* High-Density Staggering for Random Sparkle Effect (30 Hearts) */
+        .heart-sparkle-layer .heart:nth-child(1) {
+            top: 80vh;
+            left: 10vw;
+            animation-delay: 0s;
+            animation-duration: 10s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(2) {
+            top: 10vh;
+            left: 90vw;
+            animation-delay: 1s;
+            animation-duration: 12s;
+            font-size: 1rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(3) {
+            top: 40vh;
+            left: 45vw;
+            animation-delay: 2s;
+            animation-duration: 9s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(4) {
+            top: 70vh;
+            left: 60vw;
+            animation-delay: 3s;
+            animation-duration: 11s;
+            font-size: 1.2rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(5) {
+            top: 5vh;
+            left: 30vw;
+            animation-delay: 4s;
+            animation-duration: 8s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(6) {
+            top: 90vh;
+            left: 75vw;
+            animation-delay: 5s;
+            animation-duration: 13s;
+            font-size: 0.8rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(7) {
+            top: 25vh;
+            left: 5vw;
+            animation-delay: 6s;
+            animation-duration: 10s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(8) {
+            top: 55vh;
+            left: 20vw;
+            animation-delay: 0.5s;
+            animation-duration: 12.5s;
+            font-size: 0.7rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(9) {
+            top: 15vh;
+            left: 50vw;
+            animation-delay: 1.5s;
+            animation-duration: 9.5s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(10) {
+            top: 95vh;
+            left: 40vw;
+            animation-delay: 2.5s;
+            animation-duration: 11.5s;
+            font-size: 1.1rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(11) {
+            top: 30vh;
+            left: 80vw;
+            animation-delay: 3.5s;
+            animation-duration: 8.5s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(12) {
+            top: 85vh;
+            left: 5vw;
+            animation-delay: 4.5s;
+            animation-duration: 12s;
+            font-size: 0.9rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(13) {
+            top: 50vh;
+            left: 70vw;
+            animation-delay: 5.5s;
+            animation-duration: 13.5s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(14) {
+            top: 20vh;
+            left: 15vw;
+            animation-delay: 6.5s;
+            animation-duration: 10.5s;
+            font-size: 1.3rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(15) {
+            top: 60vh;
+            left: 95vw;
+            animation-delay: 7.5s;
+            animation-duration: 8s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(16) {
+            top: 75vh;
+            left: 30vw;
+            animation-delay: 8.5s;
+            animation-duration: 12.8s;
+            font-size: 0.6rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(17) {
+            top: 35vh;
+            left: 65vw;
+            animation-delay: 9.5s;
+            animation-duration: 9s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(18) {
+            top: 10vh;
+            left: 5vw;
+            animation-delay: 10.5s;
+            animation-duration: 11s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(19) {
+            top: 80vh;
+            left: 90vw;
+            animation-delay: 11.5s;
+            animation-duration: 13s;
+            font-size: 1.1rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(20) {
+            top: 45vh;
+            left: 10vw;
+            animation-delay: 12.5s;
+            animation-duration: 8.5s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(21) {
+            top: 5vh;
+            left: 5vw;
+            animation-delay: 0.2s;
+            animation-duration: 9s;
+            font-size: 0.4rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(22) {
+            top: 90vh;
+            left: 20vw;
+            animation-delay: 1.2s;
+            animation-duration: 11s;
+            font-size: 0.45rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(23) {
+            top: 60vh;
+            left: 85vw;
+            animation-delay: 2.2s;
+            animation-duration: 10s;
+            font-size: 0.35rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(24) {
+            top: 20vh;
+            left: 40vw;
+            animation-delay: 3.2s;
+            animation-duration: 13s;
+            font-size: 0.4rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(25) {
+            top: 70vh;
+            left: 95vw;
+            animation-delay: 4.2s;
+            animation-duration: 9.5s;
+            font-size: 0.5rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(26) {
+            top: 30vh;
+            left: 75vw;
+            animation-delay: 5.2s;
+            animation-duration: 10.8s;
+            font-size: 0.3rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(27) {
+            top: 85vh;
+            left: 50vw;
+            animation-delay: 6.2s;
+            animation-duration: 11.2s;
+            font-size: 0.45rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(28) {
+            top: 15vh;
+            left: 25vw;
+            animation-delay: 7.2s;
+            animation-duration: 8.2s;
+            font-size: 0.4rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(29) {
+            top: 40vh;
+            left: 5vw;
+            animation-delay: 8.2s;
+            animation-duration: 12.4s;
+            font-size: 0.5rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(30) {
+            top: 95vh;
+            left: 70vw;
+            animation-delay: 9.2s;
+            animation-duration: 9.8s;
+            font-size: 0.35rem;
+        }
+
+        /* Existing custom animations (retained for the main heart and text) */
+        @keyframes floatAnim {
+            0% {
+                transform: translateX(0px) scale(1);
+            }
+
+            50% {
+                transform: translateX(5px) scale(1.02);
+            }
+
+            100% {
+                transform: translateX(0px) scale(1);
+            }
+        }
+
+        @keyframes heartBeat {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .animate-float {
+            animation: floatAnim 1s infinite alternate;
+        }
+
+        .animate-pulse-heart {
+            animation: heartBeat 1s infinite ease-in-out;
+        }
+
+        .animate-float-reverse {
+            animation: floatAnim 3s infinite alternate reverse;
+        }
+
+    h1 {
+        font-size: 32px;
+        font-weight: 700;
+        margin-top: 20px;
+        color: #ffb3ff;
+        text-shadow: 0 0 10px #ff4fd8;
+        z-index: 10;
+        text-align: center;
+    }
+
+    p.subtitle {
+        font-size: 16px;
+        color: #ffd9ff;
+        margin-top: -5px;
+        margin-bottom: 20px;
+        z-index: 10;
+        text-align: center;
+    }
+
+    /* --- LAYOUT CONTAINER --- */
+    .gallery-container {
+        display: flex;
+        flex-direction: row;
+        gap: 30px;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        z-index: 10;
+        width: 100%;
+        max-width: 1000px;
+        padding: 10px;
+    }
+
+    /* --- MAIN CARD (Glass Background) --- */
+    .card {
+        width: 340px;           
+        height: 500px; /* Increased height for text */
+        border-radius: 30px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 20px;
+        
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    /* --- INNER DASHED FRAME (Only for Image/Video) --- */
+    .dashed-frame {
+        width: 85%;
+        height: 90%; /* Adjusted height to fit text below */
+        border: 2px dashed rgba(255, 255, 255, 0.5);
+        border-radius: 20px;
+        padding: 6px;
+        position: relative;
+        box-sizing: border-box;
+    }
+
+    .dashed-frame video, 
+    .dashed-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 14px;
+        display: block;
+    }
+
+    /* --- TEXT LINES BELOW CONTENT --- */
+    .card-text {
+        font-size: 18px;
+        color: #fff;
+        text-align: center;
+        width: 85%;
+        min-height: 20px; /* Keeps layout stable */
+    }
+
+    .caption-content {
+        display: none; /* Hidden by default, JS turns it on */
+        animation: fade 1s;
+    }
+
+    /* --- ARROWS (Outside the dashed frame) --- */
+    .prev, .next {
+        cursor: pointer;
+        position: absolute;
+        top: 35%; /* Aligned with the image area */
+        width: 35px;
+        height: 35px;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 20px;
+        transition: 0.3s ease;
+        z-index: 20;
+    }
+
+    .next { right: 10px; }
+    .prev { left: 10px; }
+
+    .prev:hover, .next:hover {
+        background-color: #ff55dd;
+        transform: scale(1.1);
+    }
+
+    /* --- DOTS (Outside the dashed frame, bottom) --- */
+    .dots-container {
+        position: absolute;
+        bottom: -20px;
+        width: 100%;
+        text-align: center;
+        z-index: 20;
+    }
+
+    .dot {
+        cursor: pointer;
+        height: 5px;
+        width:5px;
+        margin: 0 5px;
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        display: inline-block;
+        transition: background-color 0.6s ease;
+        border: 1px solid rgba(255,255,255,0.5);
+    }
+
+    .active, .dot:hover {
+        background-color: #ff55dd;
+        transform: scale(1.3);
+        border-color: #ff55dd;
+    }
+
+    /* --- ANIMATION --- */
+    .slide { display: none; width: 100%; height: 100%; animation: fade 1.0s; }
+    @keyframes fade { from {opacity: .4} to {opacity: 1} }
+
+    /* --- BUTTON --- */
+    .next-surprise-btn {
+        margin-top: 40px;
+        margin-bottom: 40px;
+        padding: 12px 24px;
+        font-size: 18px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid #ff55dd;
+        color: #fff;
+        border-radius: 50px;
+        cursor: pointer;
+        z-index: 10;
+        font-family: inherit;
+        transition: 0.3s;
+        box-shadow: 0 0 10px rgba(255, 85, 221, 0.5);
+    }
+    .next-surprise-btn:hover { background: #ff55dd; color: white; transform: scale(1.05); }
+
+    /* --- DECOR --- */
+    .sparkle-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+    .heart-sparkle-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; overflow: hidden; }
+    .heart-sparkle-layer .heart { position: absolute; color: #ff0059; text-shadow: 0 0 5px rgba(255, 0, 90, 0.8); animation: floatHeart 10s linear infinite alternate; font-size: 1.2rem; }
+    @keyframes floatHeart {
+        0% { transform: translate(0px, 0px) scale(0.9) rotate(0deg); opacity: 0.2; }
+        50% { transform: translate(50px, 50px) scale(1.1) rotate(15deg); opacity: 1; }
+        100% { transform: translate(100px, 100px) scale(0.9) rotate(0deg); opacity: 0.2; }
+    }
+    /* Random Hearts */
+    .heart:nth-child(1) { top: 10%; left: 10%; animation-duration: 8s; }
+    .heart:nth-child(2) { top: 20%; left: 80%; animation-duration: 10s; }
+    .heart:nth-child(3) { top: 60%; left: 20%; animation-duration: 12s; }
+    .heart:nth-child(4) { top: 70%; left: 70%; animation-duration: 9s; }
+    .heart:nth-child(5) { top: 40%; left: 50%; animation-duration: 14s; }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .gallery-container { flex-direction: column; }
+        .card { width: 85vw; height: 60vh; }
+    }
+</style>
+</head>
+
+<body>
+      <div class="sparkle-overlay"></div>
+
+    <div class="heart-sparkle-layer">
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+    </div>
+
+
+    <h1>LITTLE SILLY AND CUTE 💗</h1>
+    
+
+    <div class="gallery-container">
+        
+        <div class="card">
+            <div class="dashed-frame">
+                <video src="thumak.mp4" autoplay loop controls></video>
+            </div>
+            <div class="card-text">
+                <p>kya hi bolu smile toh dekho 😊</p>
+            </div>
+        </div>
+
+        <div class="card">
+            
+            <div class="dashed-frame">
+                <div class="slide fade" style="display: block;">
+                    <img src="pallu1.jpg" alt="Photo 1">
+                </div>
+                <div class="slide fade" style="display: block;">
+                    <img src="pallu2.png" alt="Photo 2">
+                </div>
+                <div class="slide fade">
+                    <img src="firends.jpg" alt="Photo 3">
+                </div>
+                <div class="slide fade">
+                    <img src="forever.jpg" alt="Photo 4">
+                </div>
+            </div>
+
+            <div class="card-text">
+                <p class="caption-content" style="display: block;">Hayee so cute my princess❤️</p>
+                
+                <p class="caption-content">My cute thangachii 🥰</p>
+                
+                <p class="caption-content">Three puppys 🐶🐶🐶</p>
+
+                <p class="caption-content">Forever💕</p>
+            </div>
+
+            <div class="prev" onclick="plusSlides(-1)">&#10094;</div>
+            <div class="next" onclick="plusSlides(1)">&#10095;</div>
+
+            <div class="dots-container">
+                <span class="dot active" onclick="currentSlide(1)"></span> 
+                <span class="dot" onclick="currentSlide(2)"></span> 
+                <span class="dot" onclick="currentSlide(3)"></span> 
+                <span class="dot" onclick="currentSlide(4)"></span> 
+                
+            </div>
+
+        </div>
+
+    </div>
+
+    <button class="next-surprise-btn" onclick="goToNextPage()">Let's play a game 😜</button>
+
+    <div class="sparkle-overlay"></div>
+    <div class="heart-sparkle-layer">
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+    </div>
+    
+<script>
+    function goToNextPage() {
+        window.location.href = 'game.html'; 
+    }
+
+    let slideIndex = 1;
+    showSlides(slideIndex);
+
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("slide");
+        let dots = document.getElementsByClassName("dot");
+        let captions = document.getElementsByClassName("caption-content"); // Get all captions
+
+        if (n > slides.length) {slideIndex = 1}    
+        if (n < 1) {slideIndex = slides.length}
+        
+        // Hide all slides
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";  
+        }
+        
+        // Remove active class from dots
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" active", "");
+        }
+
+        // Hide all captions
+        for (i = 0; i < captions.length; i++) {
+            captions[i].style.display = "none";
+        }
+        
+        // Show the current slide, dot, and caption
+        slides[slideIndex-1].style.display = "block";  
+        dots[slideIndex-1].className += " active";
+        captions[slideIndex-1].style.display = "block"; // Show matching caption
+    }
+</script>
+
+</body>
+</html>

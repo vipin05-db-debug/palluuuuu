@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Our Magic Journey — Voice Concert</title>
+
+    <style>
+        /* --- General Setup & Fonts --- */
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+        :root {
+            --text-color: #fff;
+            --accent-color: #ff69b4;
+            --bg-blur: rgba(255, 255, 255, 0.08);
+            
+            /* Dark semi-transparent overlay for concert mode */
+            --stage-overlay: rgba(5, 5, 15, 0.85); 
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+
+            font-family: "Shantell Sans", cursive;
+            color: #fff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background Animated Glow (unchanged) */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(255, 0, 150, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(0, 200, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 10%, rgba(255, 255, 0, 0.1) 0%, transparent 50%);
+            animation: backgroundGlow 15s ease-in-out infinite alternate;
+            z-index: 1;
+        }
+
+        @keyframes backgroundGlow {
+
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        /* Sparkle Overlay (Original white dots - retained) */
+        .sparkle-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .sparkle-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 2px;
+            background: #ffddff;
+            border-radius: 50%;
+            box-shadow: 10vw 40vh 0 0.5px #fff, 20vw 80vh 0 0.5px #ffddff, 30vw 10vh 0 1px #fff, 40vw 60vh 0 0.5px #ffddff, 50vw 30vh 0 1px #fff, 60vw 90vh 0 0.5px #ffddff, 70vw 20vh 0 1px #fff, 80vw 50vh 0 0.5px #ffddff, 90vw 75vh 0 1px #fff, 5vw 15vh 0 0.5px #ffddff, 95vw 5vh 0 1px #fff, 45vw 85vh 0 0.5px #ffddff, 85vw 30vh 0 1px #fff, 15vw 50vh 0 0.5px #ffddff, 75vw 95vh 0 1px #fff, 25vw 5vh 0 0.5px #ffddff, 12vw 62vh 0 0.75px #fff, 58vw 18vh 0 0.75px #ffddff, 35vw 45vh 0 0.5px #fff, 78vw 82vh 0 1px #ffddff, 4vw 38vh 0 0.75px #fff, 68vw 68vh 0 0.5px #ffddff, 92vw 42vh 0 1px #fff, 22vw 32vh 0 0.75px #ffddff, 55vw 55vh 0 0.5px #fff, 18vw 88vh 0 1px #ffddff, 88vw 12vh 0 0.75px #fff, 38vw 98vh 0 0.5px #ffddff;
+            animation: sparkleMove 20s linear infinite, sparkleFade 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes sparkleMove {
+
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(100px, 100px) scale(1.1);
+            }
+        }
+
+        @keyframes sparkleFade {
+
+            0% {
+                opacity: 0.2;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.2;
+            }
+        }
+
+        /* === HEART SPARKLE LAYER (SUBTLE MOVEMENT) === */
+        .heart-sparkle-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            overflow: hidden;
+            animation: backgroundGlow 15s ease-in-out infinite alternate;
+        }
+
+        /* KEYFRAME: SUBTLE SHIFT (Matching the movement style of .sparkle-overlay) */
+        @keyframes floatHeart {
+            0% {
+                transform: translate(0px, 0px) scale(0.9) rotate(0deg);
+                opacity: 0.2;
+            }
+
+            50% {
+                transform: translate(50px, 50px) scale(1.1) rotate(15deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(100px, 100px) scale(0.9) rotate(0deg);
+                opacity: 0.2;
+            }
+        }
+
+        .heart-sparkle-layer .heart {
+            position: absolute;
+            color: #ff0059;
+            text-shadow: 0 0 5px rgba(255, 0, 90, 0.8);
+            animation: floatHeart 10s linear infinite alternate;
+            font-size: clamp(0.3rem, 1vw + 0.5rem, 1.5rem);
+        }
+
+        /* High-Density Staggering for Random Sparkle Effect (30 Hearts) */
+        .heart-sparkle-layer .heart:nth-child(1) {
+            top: 80vh;
+            left: 10vw;
+            animation-delay: 0s;
+            animation-duration: 10s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(2) {
+            top: 10vh;
+            left: 90vw;
+            animation-delay: 1s;
+            animation-duration: 12s;
+            font-size: 1rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(3) {
+            top: 40vh;
+            left: 45vw;
+            animation-delay: 2s;
+            animation-duration: 9s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(4) {
+            top: 70vh;
+            left: 60vw;
+            animation-delay: 3s;
+            animation-duration: 11s;
+            font-size: 1.2rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(5) {
+            top: 5vh;
+            left: 30vw;
+            animation-delay: 4s;
+            animation-duration: 8s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(6) {
+            top: 90vh;
+            left: 75vw;
+            animation-delay: 5s;
+            animation-duration: 13s;
+            font-size: 0.8rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(7) {
+            top: 25vh;
+            left: 5vw;
+            animation-delay: 6s;
+            animation-duration: 10s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(8) {
+            top: 55vh;
+            left: 20vw;
+            animation-delay: 0.5s;
+            animation-duration: 12.5s;
+            font-size: 0.7rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(9) {
+            top: 15vh;
+            left: 50vw;
+            animation-delay: 1.5s;
+            animation-duration: 9.5s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(10) {
+            top: 95vh;
+            left: 40vw;
+            animation-delay: 2.5s;
+            animation-duration: 11.5s;
+            font-size: 1.1rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(11) {
+            top: 30vh;
+            left: 80vw;
+            animation-delay: 3.5s;
+            animation-duration: 8.5s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(12) {
+            top: 85vh;
+            left: 5vw;
+            animation-delay: 4.5s;
+            animation-duration: 12s;
+            font-size: 0.9rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(13) {
+            top: 50vh;
+            left: 70vw;
+            animation-delay: 5.5s;
+            animation-duration: 13.5s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(14) {
+            top: 20vh;
+            left: 15vw;
+            animation-delay: 6.5s;
+            animation-duration: 10.5s;
+            font-size: 1.3rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(15) {
+            top: 60vh;
+            left: 95vw;
+            animation-delay: 7.5s;
+            animation-duration: 8s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(16) {
+            top: 75vh;
+            left: 30vw;
+            animation-delay: 8.5s;
+            animation-duration: 12.8s;
+            font-size: 0.6rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(17) {
+            top: 35vh;
+            left: 65vw;
+            animation-delay: 9.5s;
+            animation-duration: 9s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(18) {
+            top: 10vh;
+            left: 5vw;
+            animation-delay: 10.5s;
+            animation-duration: 11s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(19) {
+            top: 80vh;
+            left: 90vw;
+            animation-delay: 11.5s;
+            animation-duration: 13s;
+            font-size: 1.1rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(20) {
+            top: 45vh;
+            left: 10vw;
+            animation-delay: 12.5s;
+            animation-duration: 8.5s;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(21) {
+            top: 5vh;
+            left: 5vw;
+            animation-delay: 0.2s;
+            animation-duration: 9s;
+            font-size: 0.4rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(22) {
+            top: 90vh;
+            left: 20vw;
+            animation-delay: 1.2s;
+            animation-duration: 11s;
+            font-size: 0.45rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(23) {
+            top: 60vh;
+            left: 85vw;
+            animation-delay: 2.2s;
+            animation-duration: 10s;
+            font-size: 0.35rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(24) {
+            top: 20vh;
+            left: 40vw;
+            animation-delay: 3.2s;
+            animation-duration: 13s;
+            font-size: 0.4rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(25) {
+            top: 70vh;
+            left: 95vw;
+            animation-delay: 4.2s;
+            animation-duration: 9.5s;
+            font-size: 0.5rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(26) {
+            top: 30vh;
+            left: 75vw;
+            animation-delay: 5.2s;
+            animation-duration: 10.8s;
+            font-size: 0.3rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(27) {
+            top: 85vh;
+            left: 50vw;
+            animation-delay: 6.2s;
+            animation-duration: 11.2s;
+            font-size: 0.45rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(28) {
+            top: 15vh;
+            left: 25vw;
+            animation-delay: 7.2s;
+            animation-duration: 8.2s;
+            font-size: 0.4rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(29) {
+            top: 40vh;
+            left: 5vw;
+            animation-delay: 8.2s;
+            animation-duration: 12.4s;
+            font-size: 0.5rem;
+        }
+
+        .heart-sparkle-layer .heart:nth-child(30) {
+            top: 95vh;
+            left: 70vw;
+            animation-delay: 9.2s;
+            animation-duration: 9.8s;
+            font-size: 0.35rem;
+        }
+
+        /* Existing custom animations (retained for the main heart and text) */
+        @keyframes floatAnim {
+            0% {
+                transform: translateX(0px) scale(1);
+            }
+
+            50% {
+                transform: translateX(5px) scale(1.02);
+            }
+
+            100% {
+                transform: translateX(0px) scale(1);
+            }
+        }
+
+        @keyframes heartBeat {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .animate-float {
+            animation: floatAnim 1s infinite alternate;
+        }
+
+        .animate-pulse-heart {
+            animation: heartBeat 1s infinite ease-in-out;
+        }
+
+        .animate-float-reverse {
+            animation: floatAnim 3s infinite alternate reverse;
+        }
+
+        /* --- 2. Main Card (First Page) --- */
+        .main-content-wrapper {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 600px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background-color: var(--bg-blur);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            min-height: 40vh; 
+            text-align: left;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideUpFade 1s forwards ease-out;
+        }
+
+        @keyframes slideUpFade {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .heading {
+            font-family: 'Pacifico', cursive;
+            font-size: 2em;
+            color: #ffb7d6;
+            margin: 0 0 10px 0;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+        }
+
+        .typewriter-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1em;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            margin-bottom: 20px;
+            min-height: 150px;
+            border-right: 2px solid var(--accent-color);
+        }
+        
+        .typewriter-text.finished { border-right: none; }
+
+        .button-wrapper {
+            margin-top: 30px;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .next-button {
+            background: linear-gradient(135deg, #ff0073, #ff69b4);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 12px 35px;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .next-button:hover { transform: scale(1.05); }
+
+        /* --- 3. THE CONCERT STAGE (Second Page) --- */
+        .voice-message-stage {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* Semi-transparent dark overlay to darken screen but show sparkles */
+            background: var(--stage-overlay);
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            overflow: hidden;
+        }
+
+        .voice-message-stage.visible { opacity: 1; }
+
+        /* --- CENTER 3D BEAM (STRONG WHITE, NO BLUR) --- */
+        .center-3d-wrapper {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 100; /* OVER THE CONTAINER */
+
+        }
+
+    
+        .lamp {
+            position: absolute;
+            width: 40vh;
+            height: 400vh;
+            /* UPDATED: Much stronger White Beam gradient */
+            background-image: radial-gradient(ellipse, rgba(255, 255, 255, 0.9), rgba(255,255,255,0.4) 25%, transparent 50%);
+            top: -220vh;
+            left: 50%;
+            filter: blur(25px); 
+            opacity: 0.4;
+            margin-left: -20vh;
+            transform: perspective(23vh) rotateX(30deg);
+            /* Removed overlay/blur to make it solid "dark white" */
+            mix-blend-mode: screen; 
+        }
+
+       
+        /* --- 4. The Voice Card --- */
+        .voice-card {
+            position: relative;
+            z-index: 20; 
+            background: rgba(20, 10, 30, 0.6); 
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 25px;
+            padding: 30px 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6), inset 0 0 20px rgba(255, 105, 180, 0.1);
+            
+            width: 85%;
+            max-width: 400px;
+            height: auto;
+            max-height: 80vh;
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
+            transform: scale(0.9);
+            margin-bottom: 20px;
+        }
+
+        @keyframes popIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* TOP SECTION: Icon + Title */
+        .card-top {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .mic-icon {
+            font-size: 2.5rem;
+            color: #ff0073;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px #ff0073;
+            animation: floatAnim 3s ease-in-out infinite;
+        }
+
+        @keyframes floatAnim {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .card-top h2 {
+            font-family: 'Pacifico', cursive;
+            margin: 0 0 5px 0;
+            font-size: 1.8rem;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .sub-title {
+            font-size: 0.9rem;
+            color: #ffcae5;
+            font-weight: 300;
+        }
+
+        /* MIDDLE SECTION: Play Button */
+        .play-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 30px 0; 
+            position: relative;
+        }
+
+        .play-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff00cc, #333399); 
+            color: #fff;
+            border: 2px solid rgba(255,255,255,0.2);
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(255, 0, 204, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .play-btn:active { transform: scale(0.95); }
+        
+        /* Ring animation */
+        .play-btn::before {
+            content: '';
+            position: absolute;
+            top: -5px; left: -5px; right: -5px; bottom: -5px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 0, 204, 0.5);
+            animation: pulseRing 2s infinite;
+        }
+
+        @keyframes pulseRing {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        
+        .play-btn.playing {
+            background: #fff;
+            color: #ff00cc;
+            box-shadow: 0 0 40px #ff00cc;
+        }
+
+        .tap-text {
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* BOTTOM SECTION */
+        .message-section {
+            width: 100%;
+            border-top: 1px solid rgba(255,255,255,0.1); 
+            text-align: center;
+            overflow-y: auto;
+            max-height: 200px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.2) transparent;
+        }
+        
+        .message-section::-webkit-scrollbar { width: 3px; }
+        .message-section::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
+
+        .note-text {
+            font-size: 0.95em;
+            color: #e0e0e0;
+            line-height: 1.6;
+            margin: 0;
+            white-space: pre-wrap; 
+        }
+        
+        .visualizer-dots {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            margin-bottom: 5px;
+            height: 10px;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .dot { width: 4px; height: 4px; background: #ff69b4; border-radius: 50%; }
+        
+        .play-btn.playing ~ .tap-text { display: none; }
+        .play-btn.playing ~ .visualizer-dots { opacity: 1; }
+        .play-btn.playing ~ .visualizer-dots .dot { animation: jump 0.6s infinite ease-in-out alternate; }
+        .dot:nth-child(1) { animation-delay: 0s; }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+
+
+        /* BUTTON BELOW CARD */
+        .next-surprise-btn {
+            z-index: 20;
+            width: 85%;
+            max-width: 400px;
+            padding: 15px;
+            background: linear-gradient(90deg, #ff00cc, #ff69b4);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 0, 204, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            animation: slideUpBtn 1s forwards ease-out 0.5s; 
+            opacity: 0;
+        }
+
+        .next-surprise-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 5px 15px rgba(255, 0, 204, 0.4);
+        }
+
+        @keyframes slideUpBtn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+
+     <div class="sparkle-overlay"></div>
+
+    <div class="heart-sparkle-layer">
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+        <div class="heart">❤️</div>
+    </div>
+
+
+    <audio id="concertAudio" src="khushi.mp3" preload="auto"></audio>
+
+    <div class="main-content-wrapper" id="page1">
+        <div class="container">
+            <h2 class="heading">💗 Dear Thangachi 🎀</h2>
+            <div class="typewriter-text" id="typewriterText"></div>
+        </div>
+
+        <div class="button-wrapper" id="buttonWrapper">
+            <button class="next-button" onclick="startConcert()">
+                <span>❤️</span> Listen to My Voice
+            </button>
+        </div>
+    </div>
+
+    <div class="voice-message-stage" id="concertStage">
+        
+        <div class="center-3d-wrapper">
+            <div class="stage_highlight"></div>
+            <div class="lamp"></div>
+            <div class="spotlight-bottom"></div>
+        </div>
+
+        <div class="voice-card">
+            
+            <div class="card-top">
+                <div class="mic-icon">🎙️</div>
+                <h2>My Voice 🎵</h2>
+                <div class="sub-title">Sing with me and enjoy 💕</div>
+            </div>
+
+            <div class="play-section">
+                <button class="play-btn" id="playBtn" onclick="toggleAudio()">▶</button>
+                
+                <div class="visualizer-dots">
+                    <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                </div>
+                
+                <div class="tap-text">🔉 Tap to hear my voice</div>
+            </div>
+
+            <div class="message-section">
+                <p class="note-text">
+Thank you for being my favvv sister✨. You make every single day feel like magic (cute one) 💕. You’re my cutest little thangachi… and honestly, there’s just one word for you — BESTESTTT 😁🌸 Come on, today is special…Sing this song with me, let’s match today’s vibe ✨🎶💕
+                </p>
+            </div>
+
+        </div>
+        <button class="next-surprise-btn" onclick="goToNextPage()">
+            <span>❤️ Yourself</span>  &rarr;
+        </button>
+    </div>
+
+    <script>
+        /* --- Typewriter Script --- */
+        const text = `Today is your birthday — a very special day. 🎂
+May all your dreams come true, and may life always bring you happiness, love, and endless reasons to smile.
+
+When we first met, I never imagined we would talk every day But now,you’re my favourite sister, my cute thangachi ✨
+
+Having a sister who treats me like her own brother is a blessing💕 
+
+This anna will always be by your side — to support you, and you become successful in life i know you achieve your all goals🚀
+
+🌸 Always smile. Always stay happy. 
+
+With endless love and care,
+Your anna ❤
+
+✨ Happy Birthday, behen (Diksha) 🎂💝🎀✨
+`;
+
+        const typeWriterElement = document.getElementById('typewriterText');
+        const buttonWrapper = document.getElementById('buttonWrapper');
+        let i = 0;
+
+        function typeWriter() {
+            if (i < text.length) {
+                typeWriterElement.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 40);
+            } else {
+                typeWriterElement.classList.add('finished');
+                buttonWrapper.style.opacity = '1';
+            }
+        }
+
+        setTimeout(typeWriter, 1000);
+
+        /* --- Concert Transition Script --- */
+        function startConcert() {
+            const page1 = document.getElementById('page1');
+            const stage = document.getElementById('concertStage');
+
+            page1.style.opacity = '0';
+            page1.style.transition = 'opacity 0.8s';
+
+            setTimeout(() => {
+                page1.style.display = 'none';
+                stage.style.display = 'flex';
+                void stage.offsetWidth; 
+                stage.classList.add('visible');
+            }, 800);
+        }
+
+        /* --- Audio Player Logic --- */
+        const audio = document.getElementById('concertAudio');
+        const playBtn = document.getElementById('playBtn');
+
+        function toggleAudio() {
+            if (audio.paused) {
+                audio.play();
+                playBtn.innerHTML = '⏸';
+                playBtn.classList.add('playing');
+            } else {
+                audio.pause();
+                playBtn.innerHTML = '▶';
+                playBtn.classList.remove('playing');
+            }
+        }
+
+        audio.onended = function() {
+            playBtn.innerHTML = '▶';
+            playBtn.classList.remove('playing');
+        };
+
+        /* --- Navigation Logic --- */
+        function goToNextPage() {
+            window.location.href = 'next.html'; 
+        }
+    </script>
+</body>
+</html>
